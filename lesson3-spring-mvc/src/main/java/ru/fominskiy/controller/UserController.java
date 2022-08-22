@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.fominskiy.persist.User;
 import ru.fominskiy.persist.UserRepository;
 
-
 @Controller
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -30,11 +29,21 @@ public class UserController {
         return "user_form";
     }
 
-    @PostMapping
-    public String saveUser(User user) {
-        userRepository.update(user);
+    @GetMapping("/new")
+    public String addNewUser(Model model) {
+        model.addAttribute("user", new User(""));
+        return "user_form";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteUserById(@PathVariable long id) {
+        userRepository.delete(id);
         return "redirect:/user";
     }
 
-
+    @PostMapping
+    public String saveUser(User user) {
+        userRepository.save(user);
+        return "redirect:/user";
+    }
 }
